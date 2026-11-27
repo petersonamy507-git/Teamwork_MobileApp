@@ -1,0 +1,9 @@
+{
+  "cli": { "version": ">= 16.0.0", "appVersionSource": "local" },
+  "build": {
+    "simulator": { "ios": { "simulator": true }, "env": { "EXPO_PUBLIC_API_URL": "http://54.234.242.199:8085/api" } },
+    "preview": { "distribution": "internal", "env": { "EXPO_PUBLIC_API_URL": "http://54.234.242.199:8085/api" } },
+    "production": { "env": { "EXPO_PUBLIC_API_URL": "http://54.234.242.199:8085/api" } }
+  },
+  "submit": { "production": {} }
+}
