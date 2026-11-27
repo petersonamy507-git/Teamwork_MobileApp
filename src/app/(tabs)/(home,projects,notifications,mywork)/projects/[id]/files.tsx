@@ -43,7 +43,12 @@ export default function ProjectFilesScreen() {
   };
 
   const pick = async () => {
-    const r = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true, multiple: false });
+    let r: DocumentPicker.DocumentPickerResult;
+    try {
+      r = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true, multiple: false });
+    } catch {
+      return toast('Could not open the file picker', 'error');
+    }
     if (r.canceled || !r.assets?.[0]) return;
     const a = r.assets[0];
     if (a.size && a.size > MAX_BYTES) return toast('Files must be 25 MB or smaller', 'error');

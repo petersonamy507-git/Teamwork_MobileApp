@@ -73,8 +73,8 @@ export default function ProfileScreen() {
         <AppText variant="heading" style={{ padding: spacing.lg, paddingBottom: 0 }}>
           Contact Details
         </AppText>
-        <AppListItem icon="mail-outline" title="Email" subtitle={p.email} onPress={() => void Linking.openURL(`mailto:${p.email}`)} />
-        {p.phone ? <AppListItem icon="call-outline" title="Phone" subtitle={p.phone} onPress={() => void Linking.openURL(`tel:${p.phone}`)} /> : null}
+        <AppListItem icon="mail-outline" title="Email" subtitle={p.email} onPress={() => Linking.openURL(`mailto:${p.email}`).catch(() => Alert.alert('No email app', p.email))} />
+        {p.phone ? <AppListItem icon="call-outline" title="Phone" subtitle={p.phone} onPress={() => Linking.openURL(`tel:${p.phone}`).catch(() => Alert.alert('Cannot place a call', p.phone))} /> : null}
       </AppCard>
 
       {isMe ? (

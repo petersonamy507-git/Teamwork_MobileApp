@@ -2,11 +2,14 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator, Image, View } from 'react-native';
-import { ToastProvider } from '../components';
+import { ScreenCrash, ToastProvider } from '../components';
 import { AuthProvider, useAuth } from '../features/auth';
 import { QueryProvider } from '../providers/QueryProvider';
 import { ThemeProvider, useTheme } from '../theme';
 import { UpdatePrompt } from '../features/update';
+
+/** Last-resort catch for anything a screen boundary misses: shows a retry screen instead of closing the app. */
+export const ErrorBoundary = ScreenCrash;
 
 function RootStack() {
   const { user, restoring } = useAuth();
@@ -23,6 +26,7 @@ function RootStack() {
     <>
       <StatusBar style={dark ? 'light' : 'dark'} />
       <Stack
+        unstable_screenErrorBoundary={ScreenCrash}
         screenOptions={{
           headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,

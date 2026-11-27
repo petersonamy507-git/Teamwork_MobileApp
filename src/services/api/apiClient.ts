@@ -62,6 +62,11 @@ async function request<T>(method: Method, path: string, body?: unknown, attempt 
     onUnauthorized?.();
   }
   if (!res.ok) throw errorFromResponse(res.status, data);
+  // Every Crewdesk API route answers with JSON. A 2xx text/HTML body means the server has no such route and
+  // served its web page instead; returning that string would crash screens that expect arrays/objects.
+  if (res.status !== 204 && !isJson) {
+    throw new ApiError("This feature isn't available on your Crewdesk server yet.", 'not_found', 404);
+  }
   return data as T;
 }
 

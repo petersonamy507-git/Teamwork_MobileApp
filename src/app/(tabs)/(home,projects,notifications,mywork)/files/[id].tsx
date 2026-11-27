@@ -31,9 +31,10 @@ export default function FileScreen() {
   const comments = useFileComments(Number(id));
   const addComment = useAddFileComment(Number(id));
   const commentsOff = comments.isError && isApiError(comments.error) && comments.error.kind === 'not_found';
+  const commentList = Array.isArray(comments.data) ? comments.data : [];
   if (files.isPending) return <AppSkeleton />;
   if (files.isError) return <AppErrorState error={files.error} onRetry={() => files.refetch()} />;
-  const f = files.data.find((x) => String(x.id) === id);
+  const f = (Array.isArray(files.data) ? files.data : []).find((x) => String(x.id) === id);
   if (!f) return <AppErrorState error={new Error('This file no longer exists.')} />;
   const k = kind(f.name);
   const open = async () => {
@@ -70,12 +71,12 @@ export default function FileScreen() {
             <AppText>{f.description}</AppText>
           </AppCard>
         ) : null}
-        <AppText variant="heading">{`Comments (${comments.data?.length ?? 0})`}</AppText>
+        <AppText variant="heading">{`Comments (${commentList.length})`}</AppText>
         {commentsOff ? (
           <AppText tone="muted">{"Comments on files will appear here once they're switched on for your Crewdesk server."}</AppText>
         ) : (
           <>
-            {(comments.data ?? []).map((c) => (
+            {commentList.map((c) => (
               <View key={c.id} style={styles.comment}>
                 <AppAvatar user={c.user} size={28} />
                 <View style={{ flex: 1, gap: 2 }}>
@@ -85,7 +86,7 @@ export default function FileScreen() {
                       {timeAgo(c.created_at)}
                     </AppText>
                   </AppText>
-                  <AppText>{c.body.replace(/<[^>]+>/g, '')}</AppText>
+                  <AppText>{String(c.body ?? '').replace(/<[^>]+>/g, '')}</AppText>
                 </View>
               </View>
             ))}

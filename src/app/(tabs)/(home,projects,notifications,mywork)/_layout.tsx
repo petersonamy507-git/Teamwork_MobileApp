@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { ScreenCrash } from '../../../components';
 import { AccountButton } from '../../../features/shell';
 import { useTheme } from '../../../theme';
 
@@ -20,6 +21,7 @@ export default function TabStack() {
   const root = { headerLeft: () => <AccountButton /> };
   return (
     <Stack
+      unstable_screenErrorBoundary={ScreenCrash}
       screenOptions={{
         headerStyle: { backgroundColor: colors.background },
         headerTintColor: colors.text,
