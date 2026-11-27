@@ -141,7 +141,7 @@ export default function HqScreen() {
               return (
                 <AppCard
                   key={p.id}
-                  onPress={() => router.push(`/projects/${p.id}/tasks`)}
+                  onPress={() => router.push(`/projects/${p.id}`)}
                   accessibilityLabel={`Project ${p.name}`}
                   style={[styles.card, { width: twoUp ? '48.5%' : '100%', borderLeftColor: p.color || colors.accent }]}
                 >
@@ -192,7 +192,7 @@ export default function HqScreen() {
               <Pressable
                 key={a.id}
                 disabled={!a.project_id}
-                onPress={() => a.project_id && router.push(`/projects/${a.project_id}/tasks`)}
+                onPress={() => a.project_id && router.push(`/projects/${a.project_id}`)}
                 style={styles.actRow}
               >
                 <AppAvatar user={a.user} size={26} />

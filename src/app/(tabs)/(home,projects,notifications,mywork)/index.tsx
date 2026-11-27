@@ -76,7 +76,7 @@ export default function HomeScreen() {
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel={`Project ${p.name}`}
-                  onPress={() => router.push(`/projects/${p.id}/tasks`)}
+                  onPress={() => router.push(`/projects/${p.id}`)}
                   style={({ pressed }) => [styles.recent, pressed && { backgroundColor: colors.surfaceAlt }]}
                 >
                   <View style={[styles.tile, { backgroundColor: colors.background }]}>

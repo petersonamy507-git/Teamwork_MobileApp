@@ -95,7 +95,7 @@ export default function ProjectsScreen() {
     return [...(starred.length ? [{ title: 'Starred', data: starred }] : []), ...[...groups.entries()].map(([title, data]) => ({ title, data }))];
   }, [projects, sort]);
 
-  const open = useCallback((p: Project) => router.push(`/projects/${p.id}/tasks`), [router]);
+  const open = useCallback((p: Project) => router.push(`/projects/${p.id}`), [router]);
   const toggleStar = useCallback(
     (p: Project) => star.mutate({ project: p, starred: !p.is_starred }, { onError: (e) => toast(e.message, 'error') }),
     [star, toast],
