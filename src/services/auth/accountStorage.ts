@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 
 /** One signed-in Crewdesk account kept on this device (token stays in the keychain/keystore). */
-export type StoredAccount = { userId: number; name: string; email: string; color?: string | null; token: string };
+export type StoredAccount = { userId: number; name: string; email: string; color?: string | null; role?: string; token: string };
 
 const KEY = 'crewdesk_accounts';
 

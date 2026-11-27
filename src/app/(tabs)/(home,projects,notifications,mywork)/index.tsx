@@ -10,6 +10,7 @@ import { radius, readable, spacing, useTheme } from '../../../theme';
 import { timeAgo } from '../../../utils/format';
 
 const VIEWS: { label: string; icon: IconName; href: Href; tint: string }[] = [
+  { label: 'HQ', icon: 'business-outline', href: '/hq', tint: '#4461d7' },
   { label: 'Activity', icon: 'flash-outline', href: '/activity', tint: '#14b8a6' },
   // My work lives in its own tab, as in the reference app.
   { label: 'My work', icon: 'list-outline', href: '/(tabs)/(mywork)/my-work', tint: '#6366f1' },

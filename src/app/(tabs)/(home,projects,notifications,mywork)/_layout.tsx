@@ -34,6 +34,7 @@ export default function TabStack() {
       <Stack.Screen name="projects" options={{ title: 'Projects', ...root }} />
       <Stack.Screen name="notifications" options={{ title: 'Notifications', ...root }} />
       <Stack.Screen name="my-work" options={{ title: 'My work', ...root }} />
+      <Stack.Screen name="hq" options={{ title: 'HQ' }} />
       <Stack.Screen name="activity" options={{ title: 'Activity' }} />
       <Stack.Screen name="my-day" options={{ title: 'My day' }} />
       <Stack.Screen name="settings" options={{ title: 'Settings' }} />

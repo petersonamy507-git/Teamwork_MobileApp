@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { setUnauthorizedHandler } from '../../services/api';
+import { isApiError, setUnauthorizedHandler } from '../../services/api';
 import { accountStorage, type StoredAccount } from '../../services/auth/accountStorage';
 import { tokenStorage } from '../../services/auth/tokenStorage';
 import type { User } from '../../types/models';
@@ -21,7 +21,9 @@ type AuthState = {
 
 const AuthCtx = createContext<AuthState | null>(null);
 
-const toStored = (u: User, token: string): StoredAccount => ({ userId: u.id, name: u.name, email: u.email, color: u.color, token });
+const toStored = (u: User, token: string): StoredAccount => ({ userId: u.id, name: u.name, email: u.email, color: u.color, role: u.role, token });
+const fromStored = (a: StoredAccount): User => ({ id: a.userId, name: a.name, email: a.email, color: a.color, role: a.role ?? 'member' });
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
@@ -46,10 +48,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const token = await tokenStorage.get();
         if (token) {
-          const me = await authApi.me();
-          if (alive) setUser(me);
-          // Older installs only had a single token: register it as an account.
-          await accountStorage.upsert(toStored(me, token));
+          // A phone that just woke up or rebooted often has no network yet: retry before giving up.
+          let me: User | null = null;
+          for (let attempt = 0; ; attempt++) {
+            try {
+              me = await authApi.me();
+              break;
+            } catch (e) {
+              // Only a rejected token signs the user out. Anything else (offline, timeout, server down) keeps it.
+              if (isApiError(e) && (e.kind === 'unauthorized' || e.kind === 'forbidden')) throw e;
+              if (attempt >= 2) break;
+              await wait(1500 * (attempt + 1));
+            }
+          }
+          if (me) {
+            if (alive) setUser(me);
+            // Older installs only had a single token: register it as an account.
+            await accountStorage.upsert(toStored(me, token));
+          } else {
+            // Still offline: open the app with the saved account; screens load once the connection is back.
+            const saved = (await accountStorage.list()).find((a) => a.token === token);
+            if (saved && alive) setUser(fromStored(saved));
+            else if (!saved) await tokenStorage.set(null);
+          }
         }
       } catch {
         await tokenStorage.set(null);

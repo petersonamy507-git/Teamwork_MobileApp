@@ -20,6 +20,9 @@ export function fmtDateTime(iso?: string | null) {
   return parse(iso).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
+/** Milliseconds since a server timestamp (read the same way as every other date in the app). */
+export const ageMs = (iso?: string | null) => (iso ? Date.now() - parse(iso).getTime() : Infinity);
+
 export function timeAgo(iso?: string | null) {
   if (!iso) return '';
   const s = Math.floor((Date.now() - parse(iso).getTime()) / 1000);
